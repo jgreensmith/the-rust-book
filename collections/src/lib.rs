@@ -50,3 +50,21 @@ pub fn word_to_pig_latin(s: &str) -> Option<String>{
     let (c1, r) = s.split_at(1);
     Some(format!("{}-{}ay", r, c1.to_lowercase()))
 }
+
+
+pub fn add_user(s: String) -> Option<(String, String)> {
+
+    let s = s.replace(".", "");
+    let split: Vec<&str> = s.split_whitespace().collect();
+    if split.len() != 4 {
+        return None;
+    };
+
+    let departments = vec!["Engineering", "Marketing", "Finance"];
+    if departments.contains(&split[3]) {
+        return Some((split[1].to_string(), split[3].to_string()))
+    } 
+
+    None
+}
+

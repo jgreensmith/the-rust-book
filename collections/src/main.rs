@@ -17,6 +17,9 @@ fn main() {
     word_to_pig_latin(&w2);
     word_to_pig_latin(&w3);
     word_to_pig_latin(&w4);
+
+    let tup = collections::add_user(String::from("Add Fart to Engineering"));
+    println!("{tup:?}")
 }
 
 
