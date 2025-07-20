@@ -52,19 +52,27 @@ pub fn word_to_pig_latin(s: &str) -> Option<String>{
 }
 
 
-pub fn add_user(s: String) -> Option<(String, String)> {
+pub fn add_user(hm: &mut HashMap<String, String>, a: &String) -> Option<String> {
 
-    let s = s.replace(".", "");
-    let split: Vec<&str> = s.split_whitespace().collect();
-    if split.len() != 4 {
-        return None;
-    };
+    let v: Vec<&str> = a.split_whitespace().collect();
 
-    let departments = vec!["Engineering", "Marketing", "Finance"];
-    if departments.contains(&split[3]) {
-        return Some((split[1].to_string(), split[3].to_string()))
-    } 
+    let departments = ["Engineering", "Sales", "Finance"];
 
-    None
+
+    if departments.contains(&v[3]) {
+        hm.insert(v[1].to_string(), v[3].to_string());
+    } else {
+        return None
+    }
+    Some(format!("{} added to {}", v[1], v[3]))
 }
 
+pub fn get_users_by_department(hm: &HashMap<String, String>, l: &str) -> Vec<String> {
+    let mut vec = Vec::new();
+    for (k, v) in hm {
+        if v == l {
+            vec.push(k.to_string());
+        }
+    }
+    vec
+}
