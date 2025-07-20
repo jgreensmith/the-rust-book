@@ -62,6 +62,7 @@ fn main() {
             println!("{user}")
         }
     }
+    collections::start();
 
 }
 

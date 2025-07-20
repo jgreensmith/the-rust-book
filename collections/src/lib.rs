@@ -1,4 +1,5 @@
 use std::{collections::HashMap};
+use std::io;
 
 pub fn median (vec: &Vec<i32>) -> f64 {
     let mut v2: Vec<i32> = vec.iter().copied().collect();
@@ -75,4 +76,113 @@ pub fn get_users_by_department(hm: &HashMap<String, String>, l: &str) -> Vec<Str
         }
     }
     vec
+}
+
+// Using a hash map and vectors, create a text interface to allow a
+// user to add employee names to a department in a company. For
+// example, “Add Sally to Engineering” or “Add Amir to Sales.” Then
+// let the user retrieve a list of all people in a department or all
+// people in the company by department, sorted alphabetically.
+
+
+pub fn start() {
+    println!("Add employee names to each deparment!");
+
+    // We are using HashMap<String, Vec<String>> instead of
+    // HashMap<String, &mut Vec<String>> because if the hashmap owns
+    // the values, you can always get mutable references from it
+    let mut map: HashMap<String, Vec<String>> = HashMap::new();
+
+    loop {
+        println!("what to do?");
+        println!("a) add a dept");
+        println!("b) add employee to an existing dept");
+        println!("c) view all people in a department");
+        println!("d) view all people in the company by dept");
+
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+
+        let input: char = match input.trim().parse() {
+            Ok(c) => c,
+            // The underscore, _, is a catchall value; in this
+            // example, we’re saying we want to match all Err values,
+            // no matter what information they have inside them.
+            Err(_) => continue,
+        };
+
+        match input {
+            // create a new department with an empty vector on the map:
+            'a' => add_dept(&mut map),
+            'b' => add_employee_to_dept(&mut map),
+            'c' => print_employees_for_dept(&map),
+            'd' => println!("the company directory: {:?}", map),
+            _ => panic!("invalid input, goodbye!"),
+        }
+    }
+}
+
+// create a new department with an empty vector on the map:
+fn add_dept(map: &mut HashMap<String, Vec<String>>) {
+    println!("enter the name of the dept");
+    let mut dept = String::new();
+    io::stdin()
+        .read_line(&mut dept)
+        .expect("Failed to read line");
+    let dept: String = match dept.trim().parse() {
+        Ok(s) => s,
+        Err(_) => panic!("invalid dept input!"),
+    };
+    map.entry(dept).or_insert(Vec::new());
+    println!("company depts: {:?}", map);
+    println!();
+}
+
+// asks for the departments name, and the employee's name, and inserts
+// the employee's name into the deptarment
+fn add_employee_to_dept(map: &mut HashMap<String, Vec<String>>) {
+    println!("enter the name of the dept");
+    let mut dept = String::new();
+    io::stdin()
+        .read_line(&mut dept)
+        .expect("Failed to read line");
+    let dept: String = match dept.trim().parse() {
+        Ok(s) => s,
+        Err(_) => panic!("invalid dept input"),
+    };
+    let employees: Option<&mut Vec<String>> = map.get_mut(&dept);
+
+    let mut employee = String::new();
+    println!("enter the name of the employee");
+    io::stdin()
+        .read_line(&mut employee)
+        .expect("Failed to read line");
+
+    let employee: String = match employee.trim().parse() {
+        Ok(s) => s,
+        Err(_) => return,
+    };
+    if let Some(employees_vector) = employees {
+        employees_vector.push(employee.to_string());
+    } else {
+        panic!("invalid input");
+    }
+    println!("company depts: {:?}", map);
+    println!();
+}
+
+fn print_employees_for_dept(map: &HashMap<String, Vec<String>>) {
+    println!("enter the name of the dept");
+    let mut dept = String::new();
+    io::stdin()
+        .read_line(&mut dept)
+        .expect("Failed to read line");
+    let dept: String = match dept.trim().parse() {
+        Ok(s) => s,
+        Err(_) => panic!("invalid dept input"),
+    };
+    let employees = map.get(&dept);
+    println!("employees for dept: {}, are: {:?}", dept, employees);
 }
