@@ -19,6 +19,4 @@ fn main() {
             None => println!("{url} has no title")
         }
     })
-
-
 }
